@@ -6,13 +6,17 @@
   background-image: url('./assets/bg.png');
   background-size: 100% 100%;
   object-fit: contain;
-  padding: 5% 10%;
+  padding: 2% 10%;
 }
 
 .panel{
   background: #fff8;
   border-radius: 15px;
   padding: 16px;
+}
+
+.panel .option > * {
+  margin: 10px;
 }
 
 .App-logo {
@@ -25,6 +29,12 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+}
+
+.stack-history-list{
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
   max-height: 60vh;
   overflow: auto;
 }

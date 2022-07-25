@@ -6,16 +6,16 @@ import { characterList, weaponList } from './data';
 const { Option } = Select;
 
 function App () {
-  const map = {
-    gold: characterList.filter(item => item.level === '五星'),
-    purple: [...characterList.filter(item => item.level === '四星'), ...weaponList.filter(item => item.level === '四星' && item.origin === '祈愿')],
-    blue: weaponList.filter(item => item.level === '三星' && item.origin === '祈愿')
-  };
   const color = {
     五星: 'gold',
     四星: 'purple',
     三星: 'blue'
   };
+  const [map, setMap] = useState({
+    gold: characterList.filter(item => item.level === '五星'),
+    purple: [...characterList.filter(item => item.level === '四星'), ...weaponList.filter(item => item.level === '四星' && item.origin === '祈愿')],
+    blue: weaponList.filter(item => item.level === '三星' && item.origin === '祈愿')
+  });
   const [takeCount, setTakeCount] = useState({
     gold: 0,
     purple: 0,
@@ -40,7 +40,7 @@ function App () {
     const len = takeCard.multiType ? 10 : 1;
     for (let index = 0; index < len; index++) {
       const card = getTakeCard(cardCount);
-      console.log(cardCount);
+      // console.log(cardCount);
       cardArr.push(card);
     }
     setTakeCount({ ...cardCount });
@@ -95,15 +95,21 @@ function App () {
   function getTakeCard (cardCount) {
     const type = getTakeType(cardCount);
     const num = Math.round(Math.random() * (map[type].length - 1));
-    console.log(type, num, map[type][num]);
+    // console.log(type, num, map[type][num]);
     return map[type][num];
   }
 
   function getTakeChannel (value) {
     if (value === 'character') {
-      map.gold = characterList.filter(item => item.level === '五星');
+      setMap({
+        ...map,
+        gold: characterList.filter(item => item.level === '五星')
+      });
     } else {
-      map.gold = weaponList.filter(item => item.level === '五星' && item.origin === '祈愿');
+      setMap({
+        ...map,
+        gold: weaponList.filter(item => item.level === '五星' && item.origin === '祈愿')
+      });
     }
   }
 
@@ -127,15 +133,17 @@ function App () {
     <div className="App">
       <div className='panel'>
         <div className='stack-list'>{currentList}</div>
-        <div>共计{takeCard.count}次,出金{takeCount.gold}次,出紫{takeCount.purple}次,出蓝{takeCount.blue}次</div>
-        <Button type="primary" onClick={onLuckyClick}>抽1次</Button>
-        <Button type="primary" onClick={onLuckyMutiClick}>抽10次</Button>
-        <Select defaultValue="character" onChange={getTakeChannel}>
-          <Option value="character">人物池</Option>
-          <Option value="weapon">武器池</Option>
-        </Select>
+        <div>共计{takeCard.count}抽,距离保底还有{90 - takeCount.noGoldCount}抽,出金{takeCount.gold}次,出紫{takeCount.purple}次,出蓝{takeCount.blue}次</div>
+        <div className='option'>
+          <Button type="primary" onClick={onLuckyClick}>抽1次</Button>
+          <Button type="primary" onClick={onLuckyMutiClick}>抽10次</Button>
+          <Select defaultValue="character" onChange={getTakeChannel}>
+            <Option value="character">人物池</Option>
+            <Option value="weapon">武器池</Option>
+          </Select>
+        </div>
         <br/>
-        <div className='stack-list'>{stackList}</div>
+        <div className='stack-history-list'>{stackList}</div>
       </div>
     </div>
   );
